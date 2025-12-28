@@ -1,0 +1,18 @@
+Jan 15 10:30:45 server sshd[12345]: Failed password for root from 192.168.1.100 port 22
+Jan 15 10:30:50 server sshd[12346]: Failed password for admin from 192.168.1.100 port 22
+Jan 15 10:30:55 server sshd[12347]: Invalid user test from 192.168.1.100 port 22
+Jan 15 10:31:00 server sshd[12348]: Accepted publickey for user from 192.168.1.50 port 22
+Jan 15 10:31:05 server sshd[12349]: Failed password for guest from 192.168.1.100 port 22
+Jan 15 10:31:10 server sshd[12350]: Failed password for user from 192.168.1.100 port 22
+Jan 15 10:31:15 server sshd[12351]: Failed password for test from 192.168.1.100 port 22
+Jan 15 10:31:20 server sshd[12352]: Failed password for administrator from 192.168.1.100 port 22
+Jan 15 10:31:25 server sshd[12353]: Failed password for admin from 192.168.1.100 port 22
+Jan 15 10:31:30 server sshd[12354]: Failed password for root from 192.168.1.100 port 22
+Jan 15 10:39:35 server sshd[12355]: Failed password for ubuntu from 192.168.1.100 port 22
+Jan 15 11:00:00 server sshd[12356]: Accepted password for validuser from 192.168.1.200 port 22
+Jan 15 11:05:00 server sshd[12357]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 11:05:05 server sshd[12358]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 11:05:10 server sshd[12359]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 11:05:15 server sshd[12360]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 11:05:20 server sshd[12361]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 12:00:00 server sshd[12362]: Accepted password for normaluser from 192.168.1.200 port 22
