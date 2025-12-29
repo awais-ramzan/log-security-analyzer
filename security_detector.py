@@ -4,24 +4,28 @@ Detects security threats in log entries.
 """
 
 
-def detect_failed_logins(log_lines):
+def detect_failed_logins(log_lines, config=None):
     """
     Detect failed login attempts in log lines.
     
     Args:
         log_lines: List of log line strings
+        config: Config object (optional, uses defaults if not provided)
         
     Returns:
         List of failed login entries
     """
-    failed_login_keywords = [
-        'failed password',
-        'invalid user',
-        'authentication failure',
-        '401',
-        '403',
-        'unauthorized'
-    ]
+    if config:
+        failed_login_keywords = config.get_failed_login_keywords()
+    else:
+        failed_login_keywords = [
+            'failed password',
+            'invalid user',
+            'authentication failure',
+            '401',
+            '403',
+            'unauthorized'
+        ]
     
     failed_logins = []
     
@@ -33,19 +37,20 @@ def detect_failed_logins(log_lines):
     return failed_logins
 
 
-def count_failed_logins_by_ip(log_lines):
+def count_failed_logins_by_ip(log_lines, config=None):
     """
     Count failed login attempts grouped by IP address.
     
     Args:
         log_lines: List of log line strings
+        config: Config object (optional)
         
     Returns:
         Dictionary mapping IP addresses to failure counts
     """
     import re
     
-    failed_logins = detect_failed_logins(log_lines)
+    failed_logins = detect_failed_logins(log_lines, config)
     ip_pattern = r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b'
     ip_counts = {}
     
@@ -58,19 +63,23 @@ def count_failed_logins_by_ip(log_lines):
     return ip_counts
 
 
-def detect_brute_force_attacks(log_lines, threshold=5):
+def detect_brute_force_attacks(log_lines, config=None, threshold=None):
     """
     Detect potential brute force attacks.
     IPs with multiple failed login attempts above threshold.
     
     Args:
         log_lines: List of log line strings
-        threshold: Minimum number of failed attempts to flag (default: 5)
+        config: Config object (optional)
+        threshold: Minimum number of failed attempts to flag (uses config if not provided)
         
     Returns:
         Dictionary of suspicious IPs with their failure counts
     """
-    ip_failures = count_failed_logins_by_ip(log_lines)
+    if threshold is None:
+        threshold = config.get_brute_force_threshold() if config else 5
+    
+    ip_failures = count_failed_logins_by_ip(log_lines, config)
     brute_force_ips = {}
     
     for ip, count in ip_failures.items():
@@ -80,15 +89,16 @@ def detect_brute_force_attacks(log_lines, threshold=5):
     return brute_force_ips
 
 
-def detect_brute_force_time_window(log_lines, threshold=10, window_minutes=5):
+def detect_brute_force_time_window(log_lines, config=None, threshold=None, window_minutes=None):
     """
     Detect brute force attacks within a time window.
     More sophisticated: detects attacks where multiple failures occur within X minutes.
     
     Args:
         log_lines: List of log line strings
-        threshold: Minimum number of failed attempts in time window (default: 10)
-        window_minutes: Time window in minutes (default: 5)
+        config: Config object (optional)
+        threshold: Minimum number of failed attempts in time window (uses config if not provided)
+        window_minutes: Time window in minutes (uses config if not provided)
         
     Returns:
         Dictionary of suspicious IPs with attack details
@@ -97,8 +107,13 @@ def detect_brute_force_time_window(log_lines, threshold=10, window_minutes=5):
     from datetime import datetime, timedelta
     from log_parser import extract_timestamps
     
+    if threshold is None:
+        threshold = config.get_time_window_threshold() if config else 10
+    if window_minutes is None:
+        window_minutes = config.get_time_window_minutes() if config else 5
+    
     # Get failed logins with their timestamps
-    failed_logins = detect_failed_logins(log_lines)
+    failed_logins = detect_failed_logins(log_lines, config)
     timestamps = extract_timestamps(log_lines)
     
     # Pair failed logins with timestamps

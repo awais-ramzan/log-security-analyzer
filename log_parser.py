@@ -73,7 +73,7 @@ def extract_timestamps(log_lines):
     for line in log_lines:
         timestamp = None
         
-        # Trying to parse SSH format: "Jan 15 10:30:45"
+        # Try SSH format: "Dec 24 11:31:45"
         ssh_pattern = r'(\w{3})\s+(\d{1,2})\s+(\d{2}):(\d{2}):(\d{2})'
         ssh_match = re.search(ssh_pattern, line)
         if ssh_match:
@@ -89,7 +89,7 @@ def extract_timestamps(log_lines):
             except:
                 pass
         
-        # Trying to parse Apache format: "[15/Jan/2025:10:30:45 +0000]"
+        # Try Apache format: "[24/Dec/2025:11:31:45 +0000]"
         if not timestamp:
             apache_pattern = r'\[(\d{2})/(\w{3})/(\d{4}):(\d{2}):(\d{2}):(\d{2})'
             apache_match = re.search(apache_pattern, line)

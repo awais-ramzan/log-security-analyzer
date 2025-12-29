@@ -7,6 +7,7 @@ import argparse
 from log_parser import read_log_file, get_time_range
 from security_detector import detect_failed_logins, count_failed_logins_by_ip, detect_brute_force_attacks, detect_brute_force_time_window
 from report_generator import generate_report, save_report
+from config import Config
 
 
 def main():
@@ -15,12 +16,17 @@ def main():
                        help='Path to log file to analyze')
     parser.add_argument('--output', '-o',
                        help='Save report to file (optional)')
+    parser.add_argument('--config', '-c',
+                       help='Path to custom configuration file (default: config.json)')
     
     args = parser.parse_args()
     
+    # Load configuration
+    config = Config(args.config if args.config else "config.json")
+    
     # Read log file
     if args.output:
-        print(f"Analyzing: {args.log_file}....")
+        print(f"Analyzing: {args.log_file}...")
     log_lines = read_log_file(args.log_file)
     
     if not log_lines:
@@ -28,10 +34,10 @@ def main():
         return
     
     # Analyze the content of the log file
-    failed_logins = detect_failed_logins(log_lines)
-    ip_failures = count_failed_logins_by_ip(log_lines)
-    brute_force_ips = detect_brute_force_attacks(log_lines, threshold=3)
-    time_window_attacks = detect_brute_force_time_window(log_lines, threshold=5, window_minutes=5)
+    failed_logins = detect_failed_logins(log_lines, config)
+    ip_failures = count_failed_logins_by_ip(log_lines, config)
+    brute_force_ips = detect_brute_force_attacks(log_lines, config)
+    time_window_attacks = detect_brute_force_time_window(log_lines, config)
     time_range = get_time_range(log_lines)
     
     # Generate report of the analysis

@@ -31,7 +31,7 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
     report_lines.append(f"Log File: {log_file}")
     report_lines.append(f"Total Entries Analyzed: {total_entries}")
     
-    if time_range[0] and time_range[1]:
+    if time_range and time_range[0] and time_range[1]:
         report_lines.append(f"Time Range: {time_range[0]} - {time_range[1]}")
     
     report_lines.append("")
@@ -41,7 +41,9 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
     report_lines.append(f"Failed Login Attempts: {failed_logins_count}")
     report_lines.append(f"Potential Brute Force Attacks: {len(brute_force_ips)}")
     if time_window_attacks:
-        report_lines.append(f"Time-Window Attacks (5 min): {len(time_window_attacks)}")
+        # Get window minutes from first attack (all should have same window)
+        window_mins = list(time_window_attacks.values())[0].get('window_minutes', 5) if time_window_attacks else 5
+        report_lines.append(f"Time-Window Attacks ({window_mins} min): {len(time_window_attacks)}")
     report_lines.append("")
     
     # Failed Logins by IP

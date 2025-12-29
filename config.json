@@ -1,0 +1,16 @@
+{
+  "detection": {
+    "brute_force_threshold": 3,
+    "time_window_threshold": 10,
+    "time_window_minutes": 5
+  },
+  "failed_login_keywords": [
+    "failed password",
+    "invalid user",
+    "authentication failure",
+    "401",
+    "403",
+    "unauthorized"
+  ]
+}
+

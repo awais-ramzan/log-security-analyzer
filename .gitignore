@@ -3,6 +3,9 @@
 reports/
 !sample_logs/
 
+# Keep config.json (it's a default template)
+!config.json
+
 # Python
 __pycache__/
 *.py[cod]
