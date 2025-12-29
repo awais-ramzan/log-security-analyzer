@@ -1,8 +1,9 @@
 {
   "detection": {
     "brute_force_threshold": 3,
-    "time_window_threshold": 10,
-    "time_window_minutes": 5
+    "time_window_threshold": 5,
+    "time_window_minutes": 5,
+    "multiple_username_threshold": 3
   },
   "failed_login_keywords": [
     "failed password",

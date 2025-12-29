@@ -6,7 +6,7 @@ Creates security analysis reports.
 from datetime import datetime
 
 
-def generate_report(log_file, total_entries, failed_logins_count, ip_failures, brute_force_ips, time_window_attacks={}, time_range=None):
+def generate_report(log_file, total_entries, failed_logins_count, ip_failures, brute_force_ips, time_window_attacks={}, multiple_username_ips={}, time_range=None):
     """
     Generate a security analysis report.
     
@@ -17,6 +17,7 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
         ip_failures: Dictionary of IP failures
         brute_force_ips: Dictionary of brute force IPs
         time_window_attacks: Dictionary of time-window based attacks
+        multiple_username_ips: Dictionary of IPs with multiple username attempts
         time_range: Tuple of (start_time, end_time) or None
         
     Returns:
@@ -44,6 +45,8 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
         # Get window minutes from first attack (all should have same window)
         window_mins = list(time_window_attacks.values())[0].get('window_minutes', 5) if time_window_attacks else 5
         report_lines.append(f"Time-Window Attacks ({window_mins} min): {len(time_window_attacks)}")
+    if multiple_username_ips:
+        report_lines.append(f"Multiple Username Attempts: {len(multiple_username_ips)}")
     report_lines.append("")
     
     # Failed Logins by IP
@@ -62,6 +65,17 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
             report_lines.append(f"     Window Start: {details['window_start']}")
         report_lines.append("")
     
+    # Multiple Username Attempts
+    if multiple_username_ips:
+        report_lines.append("=== ⚠️  MULTIPLE USERNAME ATTEMPTS ===")
+        for ip, details in sorted(multiple_username_ips.items(), key=lambda x: x[1]['unique_usernames'], reverse=True):
+            report_lines.append(f"  🔍 IP: {ip}")
+            report_lines.append(f"     Unique Usernames Attempted: {details['unique_usernames']}")
+            report_lines.append(f"     Usernames: {', '.join(details['usernames'][:10])}")
+            if len(details['usernames']) > 10:
+                report_lines.append(f"     ... and {len(details['usernames']) - 10} more")
+        report_lines.append("")
+    
     # Brute Force Alerts (simple threshold)
     if brute_force_ips:
         report_lines.append("=== ⚠️  BRUTE FORCE ATTACKS (Threshold) ===")
@@ -70,7 +84,7 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
             report_lines.append(f"     Failed Attempts: {count}")
         report_lines.append("")
     
-    if not brute_force_ips and not time_window_attacks:
+    if not brute_force_ips and not time_window_attacks and not multiple_username_ips:
         report_lines.append("=== Security Status ===")
         report_lines.append("✅ No brute force attacks detected")
         report_lines.append("")

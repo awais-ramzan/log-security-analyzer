@@ -14,6 +14,6 @@ Jan 15 11:00:00 server sshd[12356]: Accepted password for validuser from 192.168
 Jan 15 11:05:00 server sshd[12357]: Failed password for validuser from 192.168.1.50 port 22
 Jan 15 11:05:05 server sshd[12358]: Failed password for validuser from 192.168.1.50 port 22
 Jan 15 11:05:10 server sshd[12359]: Failed password for validuser from 192.168.1.50 port 22
-Jan 15 11:05:15 server sshd[12360]: Failed password for validuser from 192.168.1.50 port 22
-Jan 15 11:05:20 server sshd[12361]: Failed password for validuser from 192.168.1.50 port 22
+Jan 15 11:05:15 server sshd[12360]: Failed password for re from 192.168.1.50 port 22
+Jan 15 11:05:20 server sshd[12361]: Failed password for test from 192.168.1.50 port 22
 Jan 15 12:00:00 server sshd[12362]: Accepted password for normaluser from 192.168.1.200 port 22

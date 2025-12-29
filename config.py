@@ -14,7 +14,8 @@ class Config:
         "detection": {
             "brute_force_threshold": 3,
             "time_window_threshold": 5,
-            "time_window_minutes": 5
+            "time_window_minutes": 5,
+            "multiple_username_threshold": 3
         },
         "failed_login_keywords": [
             "failed password",
@@ -105,6 +106,14 @@ class Config:
             if window_minutes <= 0:
                 raise ValueError("time_window_minutes must be positive")
         
+        # Validate multiple_username_threshold
+        multi_user_threshold = self.get("detection.multiple_username_threshold")
+        if multi_user_threshold is not None:
+            if not isinstance(multi_user_threshold, int):
+                raise ValueError("multiple_username_threshold must be an integer")
+            if multi_user_threshold <= 0:
+                raise ValueError("multiple_username_threshold must be positive")
+        
         # Validate failed_login_keywords
         keywords = self.get("failed_login_keywords")
         if keywords is not None:
@@ -126,6 +135,10 @@ class Config:
     def get_time_window_minutes(self):
         """Get time window duration in minutes."""
         return self.get("detection.time_window_minutes", 5)
+    
+    def get_multiple_username_threshold(self):
+        """Get multiple username detection threshold."""
+        return self.get("detection.multiple_username_threshold", 3)
     
     def get_failed_login_keywords(self):
         """Get list of failed login keywords."""
