@@ -1,30 +1,35 @@
 # Log Security Analyzer
 
-A Python tool for analyzing log files and detecting security threats. It identifies brute force attacks, suspicious login patterns, and potential security incidents by analyzing authentication logs and access patterns.
+A Python-based tool for analyzing log files and detecting security threats. It identifies brute force attacks, suspicious login behavior, and potential security incidents by analyzing authentication logs and access patterns.
+
 
 ## 🎯 Overview
 
-This tool helps security teams quickly identify threats in log files. Instead of manually scanning through thousands of log entries, it automatically detects patterns like brute force attacks, multiple username attempts, and suspicious access patterns. It supports common log formats like SSH authentication logs and Apache access logs.
+This tool helps security teams quickly identify threats in log files. Instead of manually scanning through thousands of log entries, it detects patterns such as brute force attacks, multiple username attempts, and suspicious access behavior. The current implementation supports common log formats such as SSH authentication logs and Apache access logs, based on predefined parsing rules.
 
 ## ✨ Features
 
 - **Brute Force Detection** - Identifies rapid login attempts using two methods:
   - Simple threshold: Flags IPs with many total failures
   - Time-window: Detects bursts of attacks within short time periods
-  
-- **Multiple Username Detection** - Spots when an IP tries different usernames, which often indicates reconnaissance
+
+- **Multiple Username Detection**
+  - Identifies IP addresses attempting authentication with multiple usernames, often indicating reconnaissance or brute force behavior
 
 - **Failed Login Analysis** - Tracks authentication failures and groups them by IP address
 
-- **Flexible Configuration** - Adjust detection thresholds and keywords via JSON config file
+- **Flexible Configuration**
+  - Detection thresholds and keywords are configurable via a JSON configuration file
 
-- **Multi-format Support** - Works with SSH logs, Apache logs, and other common formats
+- **Multi-format Log Support**
+  - Supports SSH authentication logs, Apache access logs, and other common text-based log formats
 
-- **Detailed Reports** - Generates security reports with alerts, statistics, and time ranges
+- **Detailed Reports**
+  - Generates structured security reports including alerts, statistics, and analyzed time ranges
 
 ## 💡 Why This Tool?
 
-Manually analyzing log files for security threats is time-consuming and error-prone. This tool automates the process, helping security teams quickly identify potential attacks without having to scan through thousands of log entries manually.
+Manually analyzing log files for security threats is time-consuming and error-prone. This tool automates the detection of common authentication-based attacks, helping analysts quickly identify potential incidents without manually reviewing thousands of log entries.
 
 ## 📋 Requirements
 
@@ -124,7 +129,7 @@ The analyzer uses `config.json` for customizable detection settings:
 ============================================================
 Log Security Analysis Report
 ============================================================
-Generated: 2025-12-29 21:59:13
+Generated: 2025-12-30 00:13:13
 Log File: sample_logs/ssh_auth.log
 Total Entries Analyzed: 19
 Time Range: 2025-01-15 10:30:45 - 2025-01-15 12:00:00
@@ -133,25 +138,34 @@ Time Range: 2025-01-15 10:30:45 - 2025-01-15 12:00:00
 Failed Login Attempts: 16
 Potential Brute Force Attacks: 2
 Time-Window Attacks (5 min): 2
-Multiple Username Attempts: 1
+Multiple Username Attempts: 2
 
 === Failed Logins by IP ===
   192.168.1.100: 10 failed attempts
   192.168.1.50: 5 failed attempts
+  192.168.1.200: 1 failed attempts
 
-=== ⚠️  MULTIPLE USERNAME ATTEMPTS ===
-  🔍 IP: 192.168.1.100
-     Unique Usernames Attempted: 7
-     Usernames: admin, administrator, guest, root, test, ubuntu, user
-
-=== 🚨 TIME-WINDOW BRUTE FORCE ATTACKS ===
-  ⚠️  IP: 192.168.1.100
+=== [CRITICAL] TIME-WINDOW BRUTE FORCE ATTACKS ===
+  [ALERT] IP: 192.168.1.100
      Failed Attempts: 9 in 5 minutes
      Window Start: 2025-01-15 10:30:45
+  [ALERT] IP: 192.168.1.50
+     Failed Attempts: 5 in 5 minutes
+     Window Start: 2025-01-15 11:05:00
 
-=== ⚠️  BRUTE FORCE ATTACKS (Threshold) ===
-  🚨 IP: 192.168.1.100
+=== [HIGH] MULTIPLE USERNAME ATTEMPTS ===
+  [WARNING] IP: 192.168.1.100
+     Unique Usernames Attempted: 7
+     Usernames: admin, administrator, guest, root, test, ubuntu, user
+  [WARNING] IP: 192.168.1.50
+     Unique Usernames Attempted: 3
+     Usernames: re, test, validuser
+
+=== [HIGH] BRUTE FORCE ATTACKS (Threshold) ===
+  [ALERT] IP: 192.168.1.100
      Failed Attempts: 10
+  [ALERT] IP: 192.168.1.50
+     Failed Attempts: 5
 ============================================================
 ```
 
@@ -173,7 +187,7 @@ log-security-analyzer/
 
 ## 🔍 How Detection Works
 
-The tool uses three main detection methods:
+The analyzer uses three main detection methods:
 
 **Simple Threshold Detection** - Counts all failed attempts from an IP. Flags IPs that exceed the configured threshold (default: 3). This catches slow, persistent attacks.
 
@@ -200,14 +214,14 @@ The tool automatically detects log formats, but works best with:
 
 Feel free to open issues or submit pull requests if you have suggestions for improvements.
 
-## 📄 License
-
-This project is open source and available for educational use.
-
 ## 📚 Learning Resources
 
-This project applies concepts from the [Google Cybersecurity Professional Certificate](https://www.coursera.org/professional-certificates/google-cybersecurity), particularly:
+This project applies concepts learned from the [Google Cybersecurity Professional Certificate](https://www.coursera.org/professional-certificates/google-cybersecurity), particularly:
 - **Course 2: Play It Safe** - SIEM tools and security monitoring
 - **Course 6: Automate Cybersecurity Tasks with Python** - Python-based log parsing and automation techniques
 - **Course 7: Sound the Alarm** - Log analysis and incident detection
+
+## 📄 License
+
+This project is open source and intended for educational and security research purposes.
 ---

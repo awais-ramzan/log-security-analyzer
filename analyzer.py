@@ -84,7 +84,7 @@ Detection Features:
     # Save or display report of the analysis
     if args.output:
         save_report(report, args.output)
-        print(f"✅ Report saved to: {args.output}")
+        print(f"Report saved to: {args.output}")
     else:
         print(report)
 

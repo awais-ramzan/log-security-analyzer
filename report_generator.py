@@ -58,18 +58,18 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
     
     # Time-Window Attacks (more sophisticated)
     if time_window_attacks:
-        report_lines.append("=== 🚨 TIME-WINDOW BRUTE FORCE ATTACKS ===")
+        report_lines.append("=== [CRITICAL] TIME-WINDOW BRUTE FORCE ATTACKS ===")
         for ip, details in sorted(time_window_attacks.items(), key=lambda x: x[1]['count'], reverse=True):
-            report_lines.append(f"  ⚠️  IP: {ip}")
+            report_lines.append(f"  [ALERT] IP: {ip}")
             report_lines.append(f"     Failed Attempts: {details['count']} in {details['window_minutes']} minutes")
             report_lines.append(f"     Window Start: {details['window_start']}")
         report_lines.append("")
     
     # Multiple Username Attempts
     if multiple_username_ips:
-        report_lines.append("=== ⚠️  MULTIPLE USERNAME ATTEMPTS ===")
+        report_lines.append("=== [HIGH] MULTIPLE USERNAME ATTEMPTS ===")
         for ip, details in sorted(multiple_username_ips.items(), key=lambda x: x[1]['unique_usernames'], reverse=True):
-            report_lines.append(f"  🔍 IP: {ip}")
+            report_lines.append(f"  [WARNING] IP: {ip}")
             report_lines.append(f"     Unique Usernames Attempted: {details['unique_usernames']}")
             report_lines.append(f"     Usernames: {', '.join(details['usernames'][:10])}")
             if len(details['usernames']) > 10:
@@ -78,15 +78,15 @@ def generate_report(log_file, total_entries, failed_logins_count, ip_failures, b
     
     # Brute Force Alerts (simple threshold)
     if brute_force_ips:
-        report_lines.append("=== ⚠️  BRUTE FORCE ATTACKS (Threshold) ===")
+        report_lines.append("=== [HIGH] BRUTE FORCE ATTACKS (Threshold) ===")
         for ip, count in sorted(brute_force_ips.items(), key=lambda x: x[1], reverse=True):
-            report_lines.append(f"  🚨 IP: {ip}")
+            report_lines.append(f"  [ALERT] IP: {ip}")
             report_lines.append(f"     Failed Attempts: {count}")
         report_lines.append("")
     
     if not brute_force_ips and not time_window_attacks and not multiple_username_ips:
         report_lines.append("=== Security Status ===")
-        report_lines.append("✅ No brute force attacks detected")
+        report_lines.append("No brute force attacks detected")
         report_lines.append("")
     
     report_lines.append("=" * 60)
